@@ -1,55 +1,48 @@
-import { expect , Page , Locator} from "@playwright/test"
-export class HomePage 
-{
-    readonly page: Page;
-    readonly mainheading: Locator;
-    readonly specialSaleHeading : Locator;
-    readonly learnMoreLink :Locator;
-    readonly learnMoreButton : Locator;
-    readonly navigationLink : Locator;
+import { Locator, Page } from '@playwright/test';
 
-    constructor(page:Page)
-    {
-        this.page = page;
-        this.mainheading = page.getByRole("heading", {name: "Think different. Make different."});
-        this.specialSaleHeading = page.getByText("Special Sale: Elevate Your SDET Skills! ");
-        this.learnMoreLink = page.getByRole("link", { name: "Learn more"}).first();
-        this.learnMoreButton = page.locator(".elementor-button-text" ,{hasText: "elementor-button-text"}).first();
-        this.navigationLink = page.locator(".zak-primary-menu");
-    }
+const HOME_URL = 'https://practice.sdetunicorns.com/';
 
-    async navigateToHomePage():Promise<void>
-    {
-    await this.page.goto("https://practice.sdetunicorns.com" ,{ waitUntil: "domcontentloaded"});
-    }
+export class HomePage {
+  readonly page: Page;
+  readonly mainHeading: Locator;
+  readonly specialSaleHeading: Locator;
+  readonly learnMoreLink: Locator;
+  readonly learnMoreButton: Locator;
 
-    async clickLearnMore():Promise<void>
-    {
+  constructor(page: Page) {
+    this.page = page;
+    this.mainHeading = page.getByRole('heading', { name: 'Think different. Make different.' });
+    this.specialSaleHeading = page.getByText('Special Sale: Elevate Your SDET Skills!');
+    this.learnMoreLink = page.getByRole('link', { name: 'Learn more' }).first();
+    this.learnMoreButton = page.locator('span.elementor-button-text', { hasText: 'Learn more' }).first();
+  }
+
+  async navigate(): Promise<void> {
+    await this.page.goto(HOME_URL, { waitUntil: 'domcontentloaded' });
+  }
+
+   getNavigationLink(linkName: string): Locator {
+    return this.page.locator('#zak-masthead').getByRole('link', { name: linkName, exact: true });
+  }
+
+  getCourseLink(courseName: string): Locator {
+    return this.page.getByRole('link', { name: courseName });
+  }
+
+  async clickLearnMore(): Promise<void> {
     await this.learnMoreLink.click();
-    }
+  }
 
-    async clickLearnMoreGetNewTab() :Promise<Page>
-    {
-       const[newtab] = await Promise.all([
-    this.page.context().waitForEvent("page"),
-    this.learnMoreLink.click(),
-       ])
+  async isLearnMoreOpeningNewTab(): Promise<boolean> {
+    const target = await this.learnMoreLink.getAttribute('target');
+    return target === '_blank';
+  }
 
-       await newtab.waitForLoadState();
-       return newtab;
+  getRedirectedPageText(expectedText: string): Locator {
+    return this.page.getByText(expectedText, { exact: true });
+  }
 
-    }
-
-    async navigatePageLink(LinkName:string) :Promise<void> 
-    {
-          this.navigationLink.getByRole('link', { name: LinkName , exact: true });
-   
-    }
-
-    async getPricingplan(plan:string) : Promise<void>
-    {
-          this.page.getByRole('heading' ,{name: plan ,exact :true});
-    }
-
-
+  getPricingPlan(planName: string): Locator {
+    return this.page.getByRole('heading', { name: planName, exact: true });
+  }
 }

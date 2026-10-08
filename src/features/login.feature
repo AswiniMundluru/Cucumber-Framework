@@ -21,7 +21,7 @@ Scenario Outline: Verify homepage navigation links are visible
     | My account |
 
 @datatable
-Scenario: Verify the homeloads succesfully
+Scenario: Verify the homepageloads succesfully
 Given Im on the SDET unicorn Homepage
 Then I should see the following pricing
 |Planname|
@@ -36,7 +36,7 @@ Given Im on the SDET unicorn Homepage
 When click on the "Learn more" Button
 Then I should go to new page "Academy Access"
 Then I should comeback to the parent page 
-Then I Should see the Homepage heading "Think Different .Make Different."
+Then I Should see the Homepage heading "Think different. Make different."
 
 
 

@@ -23,6 +23,6 @@ await this.browser?.close();
 
 })
 
-setDefaultTimeout(3000);
+setDefaultTimeout(30000);
 setWorldConstructor(CustomWorld);
 
